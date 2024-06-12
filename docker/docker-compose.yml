@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: ./php
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - app-network
+
+  apache:
+    image: httpd:latest
+    volumes:
+      - ./apache-config/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./src:/usr/local/apache2/htdocs/
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    networks:
+      - app-network
+
+  memcached:
+    image: memcached:latest
+    networks:
+      - app-network
+
+  memcached-admin:
+    image: bitnami/memcached-exporter:latest
+    environment:
+      - MEMCACHED_HOST=memcached
+    ports:
+      - "9150:9150"
+    networks:
+      - app-network
+
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    networks:
+      - app-network
+
+  frontend-proxy:
+    image: nginx:latest
+    ports:
+      - "8082:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
