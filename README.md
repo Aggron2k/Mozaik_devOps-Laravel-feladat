@@ -20,3 +20,6 @@ https://www.reddit.com/r/docker/comments/181s76n/docker_w_vanguard_riots_antiche
 - https://github.com/phpredis/phpredis/issues/2085
 - https://github.com/erikdubbelboer/phpRedisAdmin/tree/master
 - https://github.com/hatamiarash7/Memcached-Admin/blob/master/docker-compose.yml
+- https://stackoverflow.com/questions/67102759/getting-msg-as-cmdlet-invoke-webrequest-at-command-pipeline-position-1-supply-v
+- https://laravel.com/docs/11.x/installation#sail-on-windows
+
