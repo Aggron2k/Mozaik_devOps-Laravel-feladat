@@ -56,15 +56,16 @@ services:
     image: memcached:latest
     networks:
       - app-network
+    ports:
+      - "11211:11211"
 
   memcached-admin:
-    image: bitnami/memcached-exporter:latest
+    image: hatamiarash7/memcached-admin:latest
     environment:
       - MEMCACHED_HOST=memcached
+      - MEMCACHED_PORT=11211
     ports:
-      - "9150:9150"
-    networks:
-      - app-network
+      - "8086:80"
 
   mariadb:
     image: mariadb:10.11
