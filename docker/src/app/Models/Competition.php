@@ -10,7 +10,7 @@ class Competition extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'year', 'available_languages', 'points_correct_answer', 'points_wrong_answer', 'points_empty_answer'
+        'name', 'year', 'available_languages', 'location'
     ];
 
     protected $casts = [

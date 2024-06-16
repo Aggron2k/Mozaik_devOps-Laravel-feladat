@@ -21,7 +21,7 @@ class ParticipantSeeder extends Seeder
 
         Participant::create([
             'name' => 'Anna Nagy',
-            'email' => 'n.annna@gmail.com',
+            'email' => 'n.anna@gmail.com',
             'phone' => '06308786543',
             'address' => 'Tas vezér u. 58.',
         ]);

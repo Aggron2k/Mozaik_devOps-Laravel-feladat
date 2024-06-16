@@ -21,15 +21,16 @@ class RoundParticipantSeeder extends Seeder
         $participant2 = Participant::where('email', 'n.anna@gmail.com')->first();
 
         if ($round1 && $participant1) {
-            $round1->participants()->attach($participant1->id);
+            $round1->participants()->attach($participant1->id, ['total_points' => 40]);
+
         }
 
         if ($round1 && $participant2) {
-            $round1->participants()->attach($participant2->id);
+            $round1->participants()->attach($participant2->id , ['total_points' => 70]);
         }
 
         if ($round2 && $participant1) {
-            $round2->participants()->attach($participant1->id);
+            $round2->participants()->attach($participant1->id , ['total_points' => 20]);
         }
     }
 }

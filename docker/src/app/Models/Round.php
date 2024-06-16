@@ -10,7 +10,7 @@ class Round extends Model
     use HasFactory;
 
     protected $fillable = [
-        'competition_id', 'name', 'date'
+        'competition_id', 'name', 'date', 'max_points'
     ];
 
     public function competition()

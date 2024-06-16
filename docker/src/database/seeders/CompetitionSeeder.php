@@ -16,18 +16,14 @@ class CompetitionSeeder extends Seeder
             'name' => 'Math Competition',
             'year' => 2024,
             'available_languages' => json_encode(['en', 'hu']),
-            'points_correct_answer' => 5,
-            'points_wrong_answer' => -2,
-            'points_empty_answer' => 0,
+            'location' => 'Budapest',
         ]);
 
         Competition::create([
             'name' => 'Physics Competition',
             'year' => 2024,
             'available_languages' => json_encode(['en']),
-            'points_correct_answer' => 4,
-            'points_wrong_answer' => -1,
-            'points_empty_answer' => 0,
+            'location' => 'Szeged',
         ]);
     }
 }

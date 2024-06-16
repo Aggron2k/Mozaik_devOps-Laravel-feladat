@@ -21,18 +21,21 @@ class RoundSeeder extends Seeder
             'competition_id' => $competition1->id,
             'name' => 'First Round',
             'date' => '2024-06-01',
+            'max_points' => 100,
         ]);
 
         Round::create([
             'competition_id' => $competition1->id,
             'name' => 'Second Round',
             'date' => '2024-06-15',
+            'max_points' => 25,
         ]);
 
         Round::create([
             'competition_id' => $competition2->id,
             'name' => 'First Round',
             'date' => '2024-06-02',
+            'max_points' => 50,
         ]);
     }
 }

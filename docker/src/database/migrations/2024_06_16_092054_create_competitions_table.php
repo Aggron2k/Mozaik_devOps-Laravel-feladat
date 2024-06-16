@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->year('year');
+            $table->year('year')->nullable();
             $table->json('available_languages')->nullable();
-            $table->integer('points_correct_answer')->default(0);
-            $table->integer('points_wrong_answer')->default(0);
-            $table->integer('points_empty_answer')->default(0);
+            $table->string('location')->nullable();
             $table->timestamps();
 
             $table->unique(['name', 'year']);

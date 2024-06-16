@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('competition_id')->constrained('competitions')->onDelete('cascade');
             $table->string('name');
             $table->date('date');
+            $table->integer('max_points');
             $table->timestamps();
         });
     }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('round_id')->constrained('rounds')->onDelete('cascade');
             $table->foreignId('participant_id')->constrained('participants')->onDelete('cascade');
+            $table->integer('total_points');
             $table->timestamps();
         });
     }
