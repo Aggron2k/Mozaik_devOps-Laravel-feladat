@@ -12,7 +12,7 @@ class CompetitionController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'year' => 'required|integer',
-            'available_languages' => 'required|string|max:255',
+            // 'available_languages' => 'required|string|max:255',
             'location' => 'required|string|max:255',
         ]);
 

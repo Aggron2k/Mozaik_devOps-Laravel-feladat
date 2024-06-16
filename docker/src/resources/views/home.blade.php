@@ -9,7 +9,6 @@
 
                 <div class="card-body">
                     <button type="button" class="btn btn-primary" id="addCompetitionBtn">Add new competition</button>
-                    <button type="button" class="btn btn-primary">Add new participants</button>
                 </div>
             </div>
             <div class="card">
@@ -24,10 +23,14 @@
                                         data-bs-target="#collapseCompetition{{ $competition->id }}" aria-expanded="true"
                                         aria-controls="collapseCompetition{{ $competition->id }}">
                                         <b>{{ $competition->name }} | </b>
-                                        @foreach (json_decode($competition->available_languages) as $language)
-                                            <span type="button" class="btn btn-success">{{ $language }}</span>
-                                        @endforeach
-                                        <b> | </b>
+                                        @if ($competition->available_languages)
+                                            @foreach (json_decode($competition->available_languages) as $language)
+                                                <span type="button" class="btn btn-success">{{ $language }}</span>
+                                                <b> | </b>
+
+                                            @endforeach
+                                        @endif
+
                                         <span type="button" class="btn btn-secondary">{{$competition->location}}</span>
                                         <b> | </b>
                                         <span type="button" class="btn btn-secondary">{{$competition->year}}</span>
@@ -47,10 +50,9 @@
                                                         <b>{{ $round->name}}</b>
                                                         <b> | </b>
                                                         <span type="button" class="btn btn-success">Max Points:
-                                                        {{$round->max_points}}</span>              
+                                                            {{$round->max_points}}</span>
                                                         <b> | </b>
-                                                        <span type="button"
-                                                            class="btn btn-secondary">{{$round->date}}
+                                                        <span type="button" class="btn btn-secondary">{{$round->date}}
                                                         </span>
 
                                                     </button>
@@ -73,9 +75,9 @@
                                                                             <b> | </b>
                                                                             <!-- TODO:: Add points here -->
                                                                             <!-- <span type="button"
-                                                                                class="btn btn-success">{{ $participant->points }}
-                                                                            </span> -->
-                                                                            
+                                                                                                        class="btn btn-success">{{ $participant->points }}
+                                                                                                    </span> -->
+
                                                                         </button>
                                                                     </h2>
                                                                     <div id="collapseParticipant{{ $participant->id }}"
@@ -106,7 +108,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="addCompetitionModal" tabindex="-1" aria-labelledby="addCompetitionModalLabel" aria-hidden="true">
+<div class="modal fade" id="addCompetitionModal" tabindex="-1" aria-labelledby="addCompetitionModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -128,10 +131,10 @@
                         <label for="competitionLocation" class="form-label">Competition Location</label>
                         <input type="text" class="form-control" id="competitionLocation" name="location" required>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="competitionLanguages" class="form-label">Available Languages</label>
-                        <input type="text" class="form-control" id="competitionLanguages" name="available_languages" required>
-                    </div>
+                        <input type="text" class="form-control" id="competitionLanguages" name="available_languages">
+                    </div> -->
                     <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
                 </form>
             </div>
@@ -150,8 +153,8 @@
             e.preventDefault();
             var form = $(this);
             var formData = form.serialize();
-            console.log(formData);
-            
+            // console.log(formData);
+
             $.ajax({
                 url: '{{ route('competition.store') }}',
                 type: 'POST',
