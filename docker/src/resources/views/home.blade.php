@@ -135,9 +135,12 @@
                         <label for="competitionLanguages" class="form-label">Available Languages</label>
                         <input type="text" class="form-control" id="competitionLanguages" name="available_languages">
                     </div> -->
-                    <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
                 </form>
             </div>
+            <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
+      </div>
         </div>
     </div>
 </div>
