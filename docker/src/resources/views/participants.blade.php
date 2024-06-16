@@ -29,7 +29,7 @@
                         </thead>
                         <tbody>
                             @foreach($participants as $participant)
-                                <tr>
+                                <tr id="participant-{{ $participant->id }}">
                                     <th scope="row">{{ $participant->id }}</th>
                                     <td>{{ $participant->name }}</td>
                                     <td>{{ $participant->email }}</td>
@@ -48,7 +48,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Add Participant Modal -->
 <div class="modal fade" id="addParticipantModal" tabindex="-1" aria-labelledby="addParticipantModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -85,6 +85,25 @@
     </div>
 </div>
 
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this participant?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         $('#addParticipantBtn').click(function() {
@@ -112,7 +131,7 @@
                 },
                 success: function(data) {
                     $('#addParticipantModal').modal('hide');
-                    $('tbody').append('<tr><td>' + data.id + '</td><td>' + data.name + '</td><td>' + data.email + '</td><td>' + data.phone + '</td><td>' + data.address + '</td></tr>');
+                    $('tbody').append('<tr id="participant-' + data.id + '"><td>' + data.id + '</td><td>' + data.name + '</td><td>' + data.email + '</td><td>' + data.phone + '</td><td>' + data.address + '</td><td><button type="button" class="btn btn-danger" onclick="confirmDelete(' + data.id + ')">Delete</button></td></tr>');
                     $('#participantName').val('');
                     $('#participantEmail').val('');
                     $('#participantPhone').val('');
@@ -122,6 +141,30 @@
                     console.log('Error:', data);
                 }
             });
+        });
+    });
+
+    function confirmDelete(id) {
+        $('#confirmDeleteModal').data('id', id).modal('show');
+    }
+
+    $('#confirmDeleteButton').click(function() {
+        var id = $('#confirmDeleteModal').data('id');
+        var token = '{{ csrf_token() }}';
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/participants/' + id,
+            data: {
+                _token: token
+            },
+            success: function(response) {
+                $('#confirmDeleteModal').modal('hide');
+                $('#participant-' + id).remove();
+            },
+            error: function(response) {
+                console.log('Error:', response);
+            }
         });
     });
 </script>

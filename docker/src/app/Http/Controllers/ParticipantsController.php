@@ -31,7 +31,16 @@ class ParticipantsController extends Controller
             'phone' => $validatedData['phone'],
             'address' => $validatedData['address'],
         ]);
-        
+
         return response()->json($participant);
+    }
+    public function destroy($id)
+    {
+        // A résztvevő keresése és törlése
+        $participant = Participant::findOrFail($id);
+        $participant->delete();
+
+        // Visszatérés sikeres válasszal
+        return response()->json(['success' => 'Participant deleted successfully']);
     }
 }

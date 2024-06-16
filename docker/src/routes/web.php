@@ -21,4 +21,6 @@ Route::get('participants', [ParticipantsController::class, 'index'])
     ->name('participants.index')
     ->middleware('auth');
 
-    Route::post('/participants', [ParticipantsController::class, 'store']);
+Route::post('/participants', [ParticipantsController::class, 'store']);
+
+Route::delete('/participants/{id}', [App\Http\Controllers\ParticipantsController::class, 'destroy']);
