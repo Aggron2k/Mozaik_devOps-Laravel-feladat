@@ -17,91 +17,94 @@
                 <div class="card-body">
                     <div class="accordion" id="accordionCompetitions">
                         @foreach ($competitions as $competition)
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingCompetition{{ $competition->id }}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseCompetition{{ $competition->id }}" aria-expanded="true"
-                                        aria-controls="collapseCompetition{{ $competition->id }}">
-                                        <b>{{ $competition->name }} | </b>
-                                        @if ($competition->available_languages)
-                                            @foreach (json_decode($competition->available_languages) as $language)
-                                                <span type="button" class="btn btn-success">{{ $language }}</span>
-                                                <b> | </b>
-
-                                            @endforeach
-                                        @endif
-
-                                        <span type="button" class="btn btn-secondary">{{$competition->location}}</span>
-                                        <b> | </b>
-                                        <span type="button" class="btn btn-secondary">{{$competition->year}}</span>
-                                        <span type="button" class="btn btn-danger">Delete</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseCompetition{{ $competition->id }}" class="accordion-collapse collapse show"
-                                    aria-labelledby="headingCompetition{{ $competition->id }}"
-                                    data-bs-parent="#accordionCompetitions">
-                                    <div class="accordion-body">
-                                        @foreach ($competition->rounds as $round)
                                             <div class="accordion-item">
-                                                <h2 class="accordion-header" id="headingRound{{ $round->id }}">
+                                                <h2 class="accordion-header" id="headingCompetition{{ $competition->id }}">
                                                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#collapseRound{{ $round->id }}" aria-expanded="true"
-                                                        aria-controls="collapseRound{{ $round->id }}">
-                                                        <b>{{ $round->name}}</b>
-                                                        <b> | </b>
-                                                        <span type="button" class="btn btn-success">Max Points:
-                                                            {{$round->max_points}}</span>
-                                                        <b> | </b>
-                                                        <span type="button" class="btn btn-secondary">{{$round->date}}
-                                                        </span>
-                                                        <span type="button" class="btn btn-danger">Delete</span>
+                                                        data-bs-target="#collapseCompetition{{ $competition->id }}" aria-expanded="true"
+                                                        aria-controls="collapseCompetition{{ $competition->id }}">
+                                                        <b>{{ $competition->name }} | </b>
 
+                                                        @if (!empty($competition->available_languages))
+                                                                                        @php
+                                                                                            $languages = is_string($competition->available_languages) ? json_decode($competition->available_languages) : $competition->available_languages;
+                                                                                        @endphp
+                                                                                        @foreach ($languages as $language)
+                                                                                            <span type="button" class="btn btn-success">{{ $language }}</span>
+                                                                                            <b> | </b>
+                                                                                        @endforeach
+                                                        @endif
+
+                                                        <span type="button" class="btn btn-secondary">{{$competition->location}}</span>
+                                                        <b> | </b>
+                                                        <span type="button" class="btn btn-secondary">{{$competition->year}}</span>
+                                                        <span type="button" class="btn btn-danger">Delete</span>
                                                     </button>
                                                 </h2>
-                                                <div id="collapseRound{{ $round->id }}" class="accordion-collapse collapse show"
-                                                    aria-labelledby="headingRound{{ $round->id }}"
-                                                    data-bs-parent="#collapseCompetition{{ $competition->id }}">
+                                                <div id="collapseCompetition{{ $competition->id }}" class="accordion-collapse collapse show"
+                                                    aria-labelledby="headingCompetition{{ $competition->id }}"
+                                                    data-bs-parent="#accordionCompetitions">
                                                     <div class="accordion-body">
-                                                        <ul>
-                                                            @foreach ($round->participants as $participant)
-                                                                <div class="accordion-item">
-                                                                    <h2 class="accordion-header"
-                                                                        id="headingParticipant{{ $participant->id }}">
-                                                                        <button class="accordion-button" type="button"
-                                                                            data-bs-toggle="collapse"
-                                                                            data-bs-target="#collapseParticipant{{ $participant->id }}"
-                                                                            aria-expanded="true"
-                                                                            aria-controls="collapseParticipant{{ $participant->id }}">
-                                                                            <b>{{ $participant->name }}</b>
-                                                                            <b> | </b>
-                                                                            <!-- TODO:: Add points here -->
-                                                                            <!-- <span type="button"
-                                                                                                                                class="btn btn-success">{{ $participant->points }}
-                                                                                                                            </span> -->
-                                                                            <span type="button" class="btn btn-danger">Delete</span>
+                                                        @foreach ($competition->rounds as $round)
+                                                            <div class="accordion-item">
+                                                                <h2 class="accordion-header" id="headingRound{{ $round->id }}">
+                                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                                        data-bs-target="#collapseRound{{ $round->id }}" aria-expanded="true"
+                                                                        aria-controls="collapseRound{{ $round->id }}">
+                                                                        <b>{{ $round->name}}</b>
+                                                                        <b> | </b>
+                                                                        <span type="button" class="btn btn-success">Max Points:
+                                                                            {{$round->max_points}}</span>
+                                                                        <b> | </b>
+                                                                        <span type="button" class="btn btn-secondary">{{$round->date}}
+                                                                        </span>
+                                                                        <span type="button" class="btn btn-danger">Delete</span>
 
-                                                                        </button>
-                                                                    </h2>
-                                                                    <div id="collapseParticipant{{ $participant->id }}"
-                                                                        class="accordion-collapse collapse"
-                                                                        aria-labelledby="headingParticipant{{ $participant->id }}"
-                                                                        data-bs-parent="#collapseRound{{ $round->id }}">
-                                                                        <div class="accordion-body">
-                                                                            <p>Email: {{ $participant->email }}</p>
-                                                                            <p>Phone: {{ $participant->phone }}</p>
-                                                                            <p>Address: {{ $participant->address }}</p>
-                                                                        </div>
+                                                                    </button>
+                                                                </h2>
+                                                                <div id="collapseRound{{ $round->id }}" class="accordion-collapse collapse show"
+                                                                    aria-labelledby="headingRound{{ $round->id }}"
+                                                                    data-bs-parent="#collapseCompetition{{ $competition->id }}">
+                                                                    <div class="accordion-body">
+                                                                        <ul>
+                                                                            @foreach ($round->participants as $participant)
+                                                                                <div class="accordion-item">
+                                                                                    <h2 class="accordion-header"
+                                                                                        id="headingParticipant{{ $participant->id }}">
+                                                                                        <button class="accordion-button" type="button"
+                                                                                            data-bs-toggle="collapse"
+                                                                                            data-bs-target="#collapseParticipant{{ $participant->id }}"
+                                                                                            aria-expanded="true"
+                                                                                            aria-controls="collapseParticipant{{ $participant->id }}">
+                                                                                            <b>{{ $participant->name }}</b>
+                                                                                            <b> | </b>
+                                                                                            <!-- TODO:: Add points here -->
+                                                                                            <!-- <span type="button"
+                                                                                                                                                                                                                                                                                                                                                                                                        class="btn btn-success">{{ $participant->points }}
+                                                                                                                                                                                                                                                                                                                                                                                                    </span> -->
+                                                                                            <span type="button" class="btn btn-danger">Delete</span>
+
+                                                                                        </button>
+                                                                                    </h2>
+                                                                                    <div id="collapseParticipant{{ $participant->id }}"
+                                                                                        class="accordion-collapse collapse"
+                                                                                        aria-labelledby="headingParticipant{{ $participant->id }}"
+                                                                                        data-bs-parent="#collapseRound{{ $round->id }}">
+                                                                                        <div class="accordion-body">
+                                                                                            <p>Email: {{ $participant->email }}</p>
+                                                                                            <p>Phone: {{ $participant->phone }}</p>
+                                                                                            <p>Address: {{ $participant->address }}</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
-                                                            @endforeach
-                                                        </ul>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -127,11 +130,17 @@
                     </div>
                     <div class="mb-3">
                         <label for="competitionDate" class="form-label">Competition Year</label>
-                        <input type="number" class="form-control" id="competitionDate" name="year" value="{{ now()->year }}" required>
+                        <input type="number" class="form-control" id="competitionDate" name="year"
+                            value="{{ now()->year }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="competitionLocation" class="form-label">Competition Location</label>
                         <input type="text" class="form-control" id="competitionLocation" name="location" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="competitionLanguages" class="form-label">Available Languages</label>
+                        <input type="text" class="form-control" id="competitionLanguages" name="available_languages"
+                            placeholder="hu, en" value="hu, en" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -150,13 +159,20 @@
             $('#addCompetitionModal').modal('show');
         });
 
-
-        $('#submitAddCompetitionBtn').click(function(e) {
+        $('#submitAddCompetitionBtn').click(function (e) {
             e.preventDefault();
 
             var name = $('#competitionName').val();
             var year = $('#competitionDate').val();
             var location = $('#competitionLocation').val();
+            var languagesInput = $('#competitionLanguages').val().trim();
+            var languages = JSON.stringify(languagesInput.split(',').map(item => item.trim()));
+
+            if (name.trim() === '' || year.trim() === '' || location.trim() === '' || languagesInput.trim() === '') {
+            alert('Please fill in all required fields.');
+            return; // Ne folytassa az elküldést, ha bármelyik mező üres
+        }
+
             var token = '{{ csrf_token() }}';
 
             $.ajax({
@@ -166,27 +182,46 @@
                     name: name,
                     year: year,
                     location: location,
+                    available_languages: languages,
                     _token: token
                 },
-                success: function(data) {
+                success: function (data) {
                     $('#addCompetitionModal').modal('hide');
+                    var languagesHtml = '';
+
+
+                    var parsedLanguages = JSON.parse(data.available_languages);
+
+
+                    if (Array.isArray(parsedLanguages) && parsedLanguages.length > 0) {
+                        parsedLanguages.forEach(function (language, index) {
+                            languagesHtml += '<span type="button" class="btn btn-success">' + language + '</span>';
+                            if (index < parsedLanguages.length - 1) {
+                                languagesHtml += '<b> | </b>';
+                            }
+                        });
+                    }
+
+
                     $('#accordionCompetitions').append(
                         '<div class="accordion-item">' +
-                            '<h2 class="accordion-header" id="headingCompetition' + data.id + '">' +
-                                '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompetition' + data.id + '" aria-expanded="true" aria-controls="collapseCompetition' + data.id + '">' +
-                                    '<b>' + data.name + ' | </b>' +
-                                    '<span type="button" class="btn btn-secondary">' + data.location + '</span>' +
-                                    '<b> | </b>' +
-                                    '<span type="button" class="btn btn-secondary">' + data.year + '</span>' +
-                                    '<span type="button" class="btn btn-danger">Delete</span>' +
-                                '</button>' +
-                            '</h2>' +
-                            '<div id="collapseCompetition' + data.id + '" class="accordion-collapse collapse show" aria-labelledby="headingCompetition' + data.id + '" data-bs-parent="#accordionCompetitions">' +
-                                '<div class="accordion-body">' +
-                                '</div>' +
-                            '</div>' +
+                        '<h2 class="accordion-header" id="headingCompetition' + data.id + '">' +
+                        '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompetition' + data.id + '" aria-expanded="true" aria-controls="collapseCompetition' + data.id + '">' +
+                        '<b>' + data.name + ' | </b>' +
+                        languagesHtml +
+                        '<b> | </b> <span type="button" class="btn btn-secondary">' + data.location + '</span>' +
+                        '<b> | </b>' +
+                        '<span type="button" class="btn btn-secondary">' + data.year + '</span>' +
+                        '<span type="button" class="btn btn-danger">Delete</span>' +
+                        '</button>' +
+                        '</h2>' +
+                        '<div id="collapseCompetition' + data.id + '" class="accordion-collapse collapse show" aria-labelledby="headingCompetition' + data.id + '" data-bs-parent="#accordionCompetitions">' +
+                        '<div class="accordion-body">' +
+                        '</div>' +
+                        '</div>' +
                         '</div>'
                     );
+
                     $('#addCompetitionForm')[0].reset();
                 },
                 error: function(data) {
@@ -194,8 +229,10 @@
                 }
             });
         });
-    });   
+    });
+
 </script>
+
 
 
 @endsection
