@@ -34,7 +34,7 @@
                                         <span type="button" class="btn btn-secondary">{{$competition->location}}</span>
                                         <b> | </b>
                                         <span type="button" class="btn btn-secondary">{{$competition->year}}</span>
-
+                                        <span type="button" class="btn btn-danger">Delete</span>
                                     </button>
                                 </h2>
                                 <div id="collapseCompetition{{ $competition->id }}" class="accordion-collapse collapse show"
@@ -54,6 +54,7 @@
                                                         <b> | </b>
                                                         <span type="button" class="btn btn-secondary">{{$round->date}}
                                                         </span>
+                                                        <span type="button" class="btn btn-danger">Delete</span>
 
                                                     </button>
                                                 </h2>
@@ -75,8 +76,10 @@
                                                                             <b> | </b>
                                                                             <!-- TODO:: Add points here -->
                                                                             <!-- <span type="button"
-                                                                                                        class="btn btn-success">{{ $participant->points }}
-                                                                                                    </span> -->
+                                                                                                                    class="btn btn-success">{{ $participant->points }}
+                                                                                                                </span> -->
+                                                                            <span type="button"
+                                                                                class="btn btn-danger">Delete</span>
 
                                                                         </button>
                                                                     </h2>
@@ -138,9 +141,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
-      </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
+            </div>
         </div>
     </div>
 </div>
