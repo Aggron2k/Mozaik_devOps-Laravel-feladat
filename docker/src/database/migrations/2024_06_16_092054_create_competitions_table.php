@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->year('year')->nullable();
+            $table->integer('year')->nullable();
             $table->json('available_languages')->nullable();
             $table->string('location')->nullable();
             $table->timestamps();

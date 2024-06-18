@@ -76,10 +76,9 @@
                                                                             <b> | </b>
                                                                             <!-- TODO:: Add points here -->
                                                                             <!-- <span type="button"
-                                                                                                                    class="btn btn-success">{{ $participant->points }}
-                                                                                                                </span> -->
-                                                                            <span type="button"
-                                                                                class="btn btn-danger">Delete</span>
+                                                                                                                                class="btn btn-success">{{ $participant->points }}
+                                                                                                                            </span> -->
+                                                                            <span type="button" class="btn btn-danger">Delete</span>
 
                                                                         </button>
                                                                     </h2>
@@ -119,8 +118,8 @@
                 <h5 class="modal-title" id="addCompetitionModalLabel">Add New Competition</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="addCompetitionForm">
+            <form id="addCompetitionForm">
+                <div class="modal-body">
                     @csrf
                     <div class="mb-3">
                         <label for="competitionName" class="form-label">Competition Name</label>
@@ -128,22 +127,18 @@
                     </div>
                     <div class="mb-3">
                         <label for="competitionDate" class="form-label">Competition Year</label>
-                        <input type="number" class="form-control" id="competitionDate" name="year" required>
+                        <input type="number" class="form-control" id="competitionDate" name="year" value="{{ now()->year }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="competitionLocation" class="form-label">Competition Location</label>
                         <input type="text" class="form-control" id="competitionLocation" name="location" required>
                     </div>
-                    <!-- <div class="mb-3">
-                        <label for="competitionLanguages" class="form-label">Available Languages</label>
-                        <input type="text" class="form-control" id="competitionLanguages" name="available_languages">
-                    </div> -->
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="submitAddCompetitionBtn" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -155,26 +150,52 @@
             $('#addCompetitionModal').modal('show');
         });
 
-        $('#addCompetitionForm').submit(function (e) {
+
+        $('#submitAddCompetitionBtn').click(function(e) {
             e.preventDefault();
-            var form = $(this);
-            var formData = form.serialize();
-            // console.log(formData);
+
+            var name = $('#competitionName').val();
+            var year = $('#competitionDate').val();
+            var location = $('#competitionLocation').val();
+            var token = '{{ csrf_token() }}';
 
             $.ajax({
-                url: '{{ route('competition.store') }}',
                 type: 'POST',
-                data: formData,
-                success: function (response) {
-                    $('#addCompetitionModal').modal('hide');
-                    location.reload();
+                url: '{{ route('competition.store') }}',
+                data: {
+                    name: name,
+                    year: year,
+                    location: location,
+                    _token: token
                 },
-                error: function (error) {
-                    console.error('Error:', error);
+                success: function(data) {
+                    $('#addCompetitionModal').modal('hide');
+                    $('#accordionCompetitions').append(
+                        '<div class="accordion-item">' +
+                            '<h2 class="accordion-header" id="headingCompetition' + data.id + '">' +
+                                '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompetition' + data.id + '" aria-expanded="true" aria-controls="collapseCompetition' + data.id + '">' +
+                                    '<b>' + data.name + ' | </b>' +
+                                    '<span type="button" class="btn btn-secondary">' + data.location + '</span>' +
+                                    '<b> | </b>' +
+                                    '<span type="button" class="btn btn-secondary">' + data.year + '</span>' +
+                                    '<span type="button" class="btn btn-danger">Delete</span>' +
+                                '</button>' +
+                            '</h2>' +
+                            '<div id="collapseCompetition' + data.id + '" class="accordion-collapse collapse show" aria-labelledby="headingCompetition' + data.id + '" data-bs-parent="#accordionCompetitions">' +
+                                '<div class="accordion-body">' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+                    );
+                    $('#addCompetitionForm')[0].reset();
+                },
+                error: function(data) {
+                    console.log('Error:', data);
                 }
             });
         });
-    });
+    });   
 </script>
+
 
 @endsection

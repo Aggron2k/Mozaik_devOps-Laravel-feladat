@@ -11,15 +11,21 @@ class CompetitionController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'year' => 'required|integer',
+            'year' => 'required|integer|digits:4',
             // 'available_languages' => 'required|string|max:255',
             'location' => 'required|string|max:255',
         ]);
 
-        $competition = Competition::create($validatedData);
-        $competition->save();
+        $competition = Competition::create([
+            'name' => $validatedData['name'],
+            'year' => $validatedData['year'],
+            //'available_languages' => $validatedData['available_languages'],
+            'location' => $validatedData['location'],
+        ]);
+        // $competition->save();
 
-        return redirect()->route('/');
+        //return redirect()->route('/');
+        return response()->json($competition);
         
     }
 }
