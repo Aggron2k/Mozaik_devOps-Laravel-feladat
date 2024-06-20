@@ -373,7 +373,39 @@
                 },
                 success: function (data) {
                     $('#addRoundModal').modal('hide');
-                    $('#addRoundModal').modal('hide');
+                    $(document).on('hidden.bs.modal', function (e) {
+                        $('.modal-backdrop').remove();
+                    });
+                    var newRoundHtml =
+                        '<div class="accordion-item">' +
+                        '<h2 class="accordion-header" id="headingRound' + data.id + '">' +
+                        '<button class="accordion-button" type="button" data-bs-toggle="collapse" ' +
+                        'data-bs-target="#collapseRound' + data.id + '" aria-expanded="true" ' +
+                        'aria-controls="collapseRound' + data.id + '">' +
+                        '<b>' + data.name + '</b>' +
+                        '<b> | </b>' +
+                        '<span type="button" class="btn btn-success">Max Points: ' + data.max_points + '</span>' +
+                        '<b> | </b>' +
+                        '<span type="button" class="btn btn-secondary">' + data.date + '</span>' +
+                        '<b> | </b>' +
+                        '<span type="button" class="btn btn-primary">Add participants</span>' +
+                        '<b> | </b> ' +
+                        '<span type="button" class="btn btn-danger">Delete</span>' +
+                        '</button>' +
+                        '</h2>' +
+                        '<div id="collapseRound' + data.id + '" class="accordion-collapse collapse show" ' +
+                        'aria-labelledby="headingRound' + data.id + '" data-bs-parent="#accordionCompetitions">' +
+                        '<div class="accordion-body">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    $('#competition-' + competitionId + ' .accordion-body').append(newRoundHtml);
+
+                    $('#roundName').val('');
+                    $('#roundDate').val('');
+                    $('#roundMaxPoints').val('');
+                    $('#competitionId').val('');
                 },
                 error: function (xhr) {
                     alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
