@@ -5,6 +5,8 @@ run: docker-compose up -d
 
 Ezután el kell látogatni a [localhost](http://localhost/) -ra ami megjeleníti a kezdőoldalt.
 
+Weboldalon login: admin@admin.com, pw: password
+
 ## Fejlesztés alatt elöjött problémák:
 
 ### Vanguard config beállításai nem férnek meg a Dockerével, megoldás:

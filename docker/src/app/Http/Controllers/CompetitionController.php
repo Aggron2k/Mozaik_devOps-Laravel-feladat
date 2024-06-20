@@ -17,29 +17,38 @@ class CompetitionController extends Controller
         ]);
 
         if ($request->has('available_languages') && !empty($request->available_languages)) {
-            
-            $languages = json_decode($request->available_languages); 
 
-            
+            $languages = json_decode($request->available_languages);
+
+
             $competition = Competition::create([
                 'name' => $validatedData['name'],
                 'year' => $validatedData['year'],
                 'location' => $validatedData['location'],
-                'available_languages' => json_encode($languages), 
+                'available_languages' => json_encode($languages),
             ]);
 
-            
+
             return response()->json($competition);
         }
 
-        
+
         $competition = Competition::create([
             'name' => $validatedData['name'],
             'year' => $validatedData['year'],
             'location' => $validatedData['location'],
         ]);
 
-        
+
         return response()->json($competition);
     }
+
+    public function destroy($id)
+    {
+        $competition = Competition::findOrFail($id);
+        $competition->delete();
+
+        return response()->json(['success' => true]);
+    }
+
 }

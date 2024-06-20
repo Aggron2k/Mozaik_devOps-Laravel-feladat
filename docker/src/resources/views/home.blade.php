@@ -6,18 +6,16 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Functions') }}</div>
-
                 <div class="card-body">
                     <button type="button" class="btn btn-primary" id="addCompetitionBtn">Add new competition</button>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
-
                 <div class="card-body">
                     <div class="accordion" id="accordionCompetitions">
                         @foreach ($competitions as $competition)
-                                            <div class="accordion-item">
+                                            <div class="accordion-item" id="competition-{{ $competition->id }}">
                                                 <h2 class="accordion-header" id="headingCompetition{{ $competition->id }}">
                                                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                         data-bs-target="#collapseCompetition{{ $competition->id }}" aria-expanded="true"
@@ -34,10 +32,12 @@
                                                                                         @endforeach
                                                         @endif
 
-                                                        <span type="button" class="btn btn-secondary">{{$competition->location}}</span>
+                                                        <span type="button" class="btn btn-secondary">{{ $competition->location }}</span>
                                                         <b> | </b>
-                                                        <span type="button" class="btn btn-secondary">{{$competition->year}}</span>
-                                                        <span type="button" class="btn btn-danger">Delete</span>
+                                                        <span type="button" class="btn btn-secondary">{{ $competition->year }}</span>
+                                                        <b> | </b>
+                                                        <span type="button" class="btn btn-danger delete-competition-button"
+                                                            data-id="{{ $competition->id }}">Delete</span>
                                                     </button>
                                                 </h2>
                                                 <div id="collapseCompetition{{ $competition->id }}" class="accordion-collapse collapse show"
@@ -45,20 +45,20 @@
                                                     data-bs-parent="#accordionCompetitions">
                                                     <div class="accordion-body">
                                                         @foreach ($competition->rounds as $round)
-                                                            <div class="accordion-item">
+                                                            <div class="accordion-item" id="round-{{ $round->id }}">
                                                                 <h2 class="accordion-header" id="headingRound{{ $round->id }}">
                                                                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                                         data-bs-target="#collapseRound{{ $round->id }}" aria-expanded="true"
                                                                         aria-controls="collapseRound{{ $round->id }}">
-                                                                        <b>{{ $round->name}}</b>
+                                                                        <b>{{ $round->name }}</b>
                                                                         <b> | </b>
                                                                         <span type="button" class="btn btn-success">Max Points:
-                                                                            {{$round->max_points}}</span>
+                                                                            {{ $round->max_points }}</span>
                                                                         <b> | </b>
-                                                                        <span type="button" class="btn btn-secondary">{{$round->date}}
-                                                                        </span>
-                                                                        <span type="button" class="btn btn-danger">Delete</span>
-
+                                                                        <span type="button" class="btn btn-secondary">{{ $round->date }}</span>
+                                                                        <b> | </b>
+                                                                        <span type="button" class="btn btn-danger delete-round-button"
+                                                                            data-id="{{ $round->id }}">Delete</span>
                                                                     </button>
                                                                 </h2>
                                                                 <div id="collapseRound{{ $round->id }}" class="accordion-collapse collapse show"
@@ -67,7 +67,7 @@
                                                                     <div class="accordion-body">
                                                                         <ul>
                                                                             @foreach ($round->participants as $participant)
-                                                                                <div class="accordion-item">
+                                                                                <div class="accordion-item" id="participant-{{ $participant->id }}">
                                                                                     <h2 class="accordion-header"
                                                                                         id="headingParticipant{{ $participant->id }}">
                                                                                         <button class="accordion-button" type="button"
@@ -78,11 +78,11 @@
                                                                                             <b>{{ $participant->name }}</b>
                                                                                             <b> | </b>
                                                                                             <!-- TODO:: Add points here -->
-                                                                                            <!-- <span type="button"
-                                                                                                                                                                                                                                                                                                                                                                                                        class="btn btn-success">{{ $participant->points }}
-                                                                                                                                                                                                                                                                                                                                                                                                    </span> -->
-                                                                                            <span type="button" class="btn btn-danger">Delete</span>
-
+                                                                                            <!-- <span type="button" class="btn btn-success">{{ $participant->points }}</span> -->
+                                                                                            <span type="button"
+                                                                                                class="btn btn-danger delete-participant-button"
+                                                                                                data-round-id="{{ $round->id }}"
+                                                                                                data-participant-id="{{ $participant->id }}">Delete</span>
                                                                                         </button>
                                                                                     </h2>
                                                                                     <div id="collapseParticipant{{ $participant->id }}"
@@ -155,6 +155,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Adding competition event
         $('#addCompetitionBtn').click(function () {
             $('#addCompetitionModal').modal('show');
         });
@@ -169,9 +170,9 @@
             var languages = JSON.stringify(languagesInput.split(',').map(item => item.trim()));
 
             if (name.trim() === '' || year.trim() === '' || location.trim() === '' || languagesInput.trim() === '') {
-            alert('Please fill in all required fields.');
-            return; // Ne folytassa az elküldést, ha bármelyik mező üres
-        }
+                alert('Please fill in all required fields.');
+                return;
+            }
 
             var token = '{{ csrf_token() }}';
 
@@ -189,9 +190,7 @@
                     $('#addCompetitionModal').modal('hide');
                     var languagesHtml = '';
 
-
                     var parsedLanguages = JSON.parse(data.available_languages);
-
 
                     if (Array.isArray(parsedLanguages) && parsedLanguages.length > 0) {
                         parsedLanguages.forEach(function (language, index) {
@@ -202,9 +201,8 @@
                         });
                     }
 
-
                     $('#accordionCompetitions').append(
-                        '<div class="accordion-item">' +
+                        '<div class="accordion-item" id="competition-' + data.id + '">' +
                         '<h2 class="accordion-header" id="headingCompetition' + data.id + '">' +
                         '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompetition' + data.id + '" aria-expanded="true" aria-controls="collapseCompetition' + data.id + '">' +
                         '<b>' + data.name + ' | </b>' +
@@ -212,7 +210,7 @@
                         '<b> | </b> <span type="button" class="btn btn-secondary">' + data.location + '</span>' +
                         '<b> | </b>' +
                         '<span type="button" class="btn btn-secondary">' + data.year + '</span>' +
-                        '<span type="button" class="btn btn-danger">Delete</span>' +
+                        '<span type="button" class="btn btn-danger delete-competition-button" data-id="' + data.id + '">Delete</span>' +
                         '</button>' +
                         '</h2>' +
                         '<div id="collapseCompetition' + data.id + '" class="accordion-collapse collapse show" aria-labelledby="headingCompetition' + data.id + '" data-bs-parent="#accordionCompetitions">' +
@@ -224,15 +222,86 @@
 
                     $('#addCompetitionForm')[0].reset();
                 },
-                error: function(data) {
+                error: function (data) {
                     console.log('Error:', data);
                 }
             });
         });
+
+        $(document).on('click', '.delete-competition-button', function () {
+            var competitionId = $(this).data('id');
+            var $competitionItem = $('#competition-' + competitionId);
+
+            $.ajax({
+                url: '{{ url('competitions') }}/' + competitionId,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $competitionItem.remove();
+                        alert('Successfully deleted competition.');
+                    } else {
+                        alert('Failed to delete competition.');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-round-button', function () {
+            var roundId = $(this).data('id');
+            var $roundItem = $('#round-' + roundId);
+
+            $.ajax({
+                url: '{{ url('rounds') }}/' + roundId,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $roundItem.remove();
+                        alert('Successfully deleted round.');
+                    } else {
+                        alert('Failed to delete round.');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-participant-button', function () {
+            var roundId = $(this).data('round-id');
+            var participantId = $(this).data('participant-id');
+            var $participantItem = $('#participant-' + participantId);
+
+            $.ajax({
+                url: '{{ url('rounds') }}/' + roundId + '/participants/' + participantId,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $participantItem.remove();
+                        alert('Successfully deleted participant from round.');
+                    } else {
+                        alert('Failed to delete participant from round.');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
+                }
+            });
+        });
     });
-
 </script>
-
 
 
 @endsection
