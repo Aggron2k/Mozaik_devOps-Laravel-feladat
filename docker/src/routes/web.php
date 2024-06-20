@@ -15,6 +15,8 @@ Auth::routes();
 Route::post('/competitions', [CompetitionController::class, 'store'])
     ->name('competition.store')
     ->middleware('auth');
+Route::delete('/competitions/{id}', [CompetitionController::class, 'destroy'])->name('competitions.destroy');
+
 
 
 Route::get('participants', [ParticipantsController::class, 'index'])
@@ -25,8 +27,10 @@ Route::post('/participants', [ParticipantsController::class, 'store']);
 Route::delete('/participants/{id}', [App\Http\Controllers\ParticipantsController::class, 'destroy']);
 
 
-Route::delete('/competitions/{id}', [CompetitionController::class, 'destroy'])->name('competitions.destroy');
+
+Route::post('/rounds', [RoundController::class, 'store'])->name('round.store');
 Route::delete('/rounds/{id}', [RoundController::class, 'destroy'])->name('round.destroy');
+
 Route::delete('/rounds/{round_id}/participants/{participant_id}', [RoundParticipantController::class, 'destroy'])->name('round.participant.destroy');
 
 

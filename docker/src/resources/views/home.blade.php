@@ -34,9 +34,13 @@
 
                                                         <span type="button" class="btn btn-secondary">{{ $competition->location }}</span>
                                                         <b> | </b>
+                                                        {{ $competition->id }}
+                                                        <b> | </b>
                                                         <span type="button" class="btn btn-secondary">{{ $competition->year }}</span>
                                                         <b> | </b>
-                                                        <span type="button" class="btn btn-primary">Add round</span>
+                                                        <span type="button" class="btn btn-primary" id="addRoundBtn" data-bs-toggle="modal"
+                                                            data-bs-target="#addRoundModal" data-id="{{ $competition->id }}">Add
+                                                            round</span>
                                                         <b> | </b>
                                                         <span type="button" class="btn btn-danger delete-competition-button"
                                                             data-id="{{ $competition->id }}">Delete</span>
@@ -156,12 +160,50 @@
     </div>
 </div>
 
+<!-- Add Round Modal -->
+<div class="modal fade" id="addRoundModal" tabindex="-1" aria-labelledby="addRoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoundModalLabel">Add New Round</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addRoundForm">
+                <div class="modal-body">
+                    @csrf
+                    <input type="text" id="competitionId" name="competition_id" value="{{ $competition->id }}">
+                    <div class="mb-3">
+                        <label for="roundName" class="form-label">Round Name</label>
+                        <input type="text" class="form-control" id="roundName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roundDate" class="form-label">Round Date</label>
+                        <input type="date" class="form-control" id="roundDate" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roundMaxPoints" class="form-label">Max Points</label>
+                        <input type="number" class="form-control" id="roundMaxPoints" name="max_points" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="submitAddRoundBtn" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Adding competition event
         $('#addCompetitionBtn').click(function () {
             $('#addCompetitionModal').modal('show');
+        });
+
+        $('#addRoundBtn').click(function () {
+            $('#addRoundModal').modal('show');
         });
 
         $('#submitAddCompetitionBtn').click(function (e) {
@@ -298,6 +340,40 @@
                     } else {
                         alert('Failed to delete participant from round.');
                     }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
+                }
+            });
+        });
+
+        $(document).on('click', '#addRoundBtn', function () {
+            var competitionId = $(this).data('id');
+            $('#competitionId').val(competitionId);
+        });
+
+        $('#submitAddRoundBtn').click(function (e) {
+            e.preventDefault();
+
+            var competitionId = $('#competitionId').val();
+            var name = $('#roundName').val();
+            var date = $('#roundDate').val();
+            var maxPoints = $('#roundMaxPoints').val();
+            var token = '{{ csrf_token() }}';
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('round.store') }}',
+                data: {
+                    competition_id: competitionId,
+                    name: name,
+                    date: date,
+                    max_points: maxPoints,
+                    _token: token
+                },
+                success: function (data) {
+                    $('#addRoundModal').modal('hide');
+                    $('#addRoundModal').modal('hide');
                 },
                 error: function (xhr) {
                     alert('Error: ' + xhr.status + ' - ' + xhr.statusText);
