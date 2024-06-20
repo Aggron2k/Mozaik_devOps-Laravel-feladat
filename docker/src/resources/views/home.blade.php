@@ -34,8 +34,6 @@
 
                                                         <span type="button" class="btn btn-secondary">{{ $competition->location }}</span>
                                                         <b> | </b>
-                                                        {{ $competition->id }}
-                                                        <b> | </b>
                                                         <span type="button" class="btn btn-secondary">{{ $competition->year }}</span>
                                                         <b> | </b>
                                                         <span type="button" class="btn btn-primary" id="addRoundBtn" data-bs-toggle="modal"
@@ -171,7 +169,7 @@
             <form id="addRoundForm">
                 <div class="modal-body">
                     @csrf
-                    <input type="text" id="competitionId" name="competition_id" value="{{ $competition->id }}">
+                    <input type="hidden" id="competitionId" name="competition_id" value="{{ $competition->id }}">
                     <div class="mb-3">
                         <label for="roundName" class="form-label">Round Name</label>
                         <input type="text" class="form-control" id="roundName" name="name" required>
