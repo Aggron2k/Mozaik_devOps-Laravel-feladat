@@ -36,6 +36,8 @@
                                                         <b> | </b>
                                                         <span type="button" class="btn btn-secondary">{{ $competition->year }}</span>
                                                         <b> | </b>
+                                                        <span type="button" class="btn btn-primary">Add round</span>
+                                                        <b> | </b>
                                                         <span type="button" class="btn btn-danger delete-competition-button"
                                                             data-id="{{ $competition->id }}">Delete</span>
                                                     </button>
@@ -56,6 +58,8 @@
                                                                             {{ $round->max_points }}</span>
                                                                         <b> | </b>
                                                                         <span type="button" class="btn btn-secondary">{{ $round->date }}</span>
+                                                                        <b> | </b>
+                                                                        <span type="button" class="btn btn-primary">Add participants</span>
                                                                         <b> | </b>
                                                                         <span type="button" class="btn btn-danger delete-round-button"
                                                                             data-id="{{ $round->id }}">Delete</span>
@@ -241,7 +245,7 @@
                 success: function (response) {
                     if (response.success) {
                         $competitionItem.remove();
-                        alert('Successfully deleted competition.');
+                        // alert('Successfully deleted competition.');
                     } else {
                         alert('Failed to delete competition.');
                     }
@@ -265,7 +269,7 @@
                 success: function (response) {
                     if (response.success) {
                         $roundItem.remove();
-                        alert('Successfully deleted round.');
+                        // alert('Successfully deleted round.');
                     } else {
                         alert('Failed to delete round.');
                     }
@@ -290,7 +294,7 @@
                 success: function (response) {
                     if (response.success) {
                         $participantItem.remove();
-                        alert('Successfully deleted participant from round.');
+                        // alert('Successfully deleted participant from round.');
                     } else {
                         alert('Failed to delete participant from round.');
                     }
