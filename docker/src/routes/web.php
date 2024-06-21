@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ParticipantsController;
 use App\Http\Controllers\RoundParticipantController;
 use App\Http\Controllers\RoundController;
+use App\Http\Controllers\ParticipantController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -32,5 +33,10 @@ Route::post('/rounds', [RoundController::class, 'store'])->name('round.store');
 Route::delete('/rounds/{id}', [RoundController::class, 'destroy'])->name('round.destroy');
 
 Route::delete('/rounds/{round_id}/participants/{participant_id}', [RoundParticipantController::class, 'destroy'])->name('round.participant.destroy');
+
+Route::get('/participants/{roundId}', [ParticipantsController::class, 'getList']);
+Route::post('/add_participant_to_round', [ParticipantsController::class, 'store']);
+
+
 
 

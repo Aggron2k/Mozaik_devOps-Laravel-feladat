@@ -61,9 +61,11 @@
                                                                         <b> | </b>
                                                                         <span type="button" class="btn btn-secondary">{{ $round->date }}</span>
                                                                         <b> | </b>
-                                                                        <span type="button" class="btn btn-primary">Add participants</span>
+                                                                        <span type="button" class="btn btn-primary add-participant-button"
+                                                                            data-bs-toggle="modal" data-bs-target="#addParticipantModal"
+                                                                            data-id="{{ $round->id }}">Add participants</span>
                                                                         <b> | </b>
-                                                                        <span type="button" class="btn btn-danger delete-round-button"
+                                                                        <span type=" button" class="btn btn-danger delete-round-button"
                                                                             data-id="{{ $round->id }}">Delete</span>
                                                                     </button>
                                                                 </h2>
@@ -120,6 +122,7 @@
     </div>
 </div>
 
+<!-- Add Competition Modal -->
 <div class="modal fade" id="addCompetitionModal" tabindex="-1" aria-labelledby="addCompetitionModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -193,6 +196,39 @@
     </div>
 </div>
 
+<!-- Add Participant Modal -->
+<div class="modal fade" id="addParticipantModal" tabindex="-1" aria-labelledby="addParticipantModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addParticipantModalLabel">Add Participant to Round</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addParticipantForm">
+                <div class="modal-body">
+                    @csrf
+                    <input type="hidden" id="roundId" name="round_id">
+                    <div class="mb-3">
+                        <label for="participantSelect" class="form-label">Select Participant</label>
+                        <select class="form-select" id="participantSelect" name="participant_id" required>
+                            <!-- Options will be dynamically added here -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalPoints" class="form-label">Total Points</label>
+                        <input type="number" class="form-control" id="totalPoints" name="total_points" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="submitAddParticipantBtn" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -203,6 +239,12 @@
 
         $('#addRoundBtn').click(function () {
             $('#addRoundModal').modal('show');
+        });
+
+        $(document).on('click', '.add-participant-button', function () {
+            var roundId = $(this).data('id');
+            $('#addParticipantForm').data('round-id', roundId);
+            $('#addParticipantModal').modal('show');
         });
 
         $('#submitAddCompetitionBtn').click(function (e) {
@@ -411,6 +453,77 @@
                 }
             });
         });
+
+        $(document).on('click', '.add-participant-button', function () {
+            var roundId = $(this).data('id');
+            $('#roundId').val(roundId);
+
+            // Clear previous options in select
+            $('#participantSelect').empty();
+
+            // Fetch participants for the round via AJAX
+            $.ajax({
+                url: '/participants/' + roundId,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    var participants = response.participants;
+
+                    // Populate select with participants
+                    participants.forEach(function (participant) {
+                        $('#participantSelect').append('<option value="' + participant.id + '">' + participant.name + '</option>');
+                    });
+
+                    // Show modal after options are populated
+                    $('#addParticipantModal').modal('show');
+                },
+                error: function (xhr) {
+                    console.log('Error fetching participants:', xhr);
+                    alert('Failed to fetch participants.');
+                }
+            });
+        });
+
+        $('#addParticipantForm').submit(function (e) {
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '/participants', // Assuming this is your endpoint for adding participants
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    phone: $('#phone').val(),
+                    address: $('#address').val(),
+                    _token: '{{ csrf_token() }}' // Include CSRF token if required
+                },
+                success: function (response) {
+                    console.log('Participant added successfully:', response);
+                    // Optionally, do something on success
+                },
+                error: function (xhr) {
+                    console.log('Error adding participant:', xhr.responseJSON);
+                    // Handle errors here, e.g., display error messages to the user
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        // Example: Display error messages in a div with id="error-messages"
+                        $('#error-messages').empty();
+                        $.each(errors, function (key, value) {
+                            $('#error-messages').append('<div>' + value[0] + '</div>');
+                        });
+                    } else {
+                        // Handle other types of errors (e.g., 500 Internal Server Error)
+                        alert('Error adding participant. Please try again later.');
+                    }
+                }
+            });
+
+        });
+
+
     });
 </script>
 

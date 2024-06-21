@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
@@ -11,6 +12,13 @@ class ParticipantsController extends Controller
         $participants = Participant::all();
         return view('participants', ['participants' => $participants]);
     }
+
+    public function getList()
+    {
+        $participants = Participant::all();
+        return response()->json(['participants' => $participants]);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -29,6 +37,7 @@ class ParticipantsController extends Controller
 
         return response()->json($participant);
     }
+
     public function destroy($id)
     {
         $participant = Participant::findOrFail($id);

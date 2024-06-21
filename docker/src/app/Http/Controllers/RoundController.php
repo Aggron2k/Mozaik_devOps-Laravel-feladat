@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Round;
+use App\Models\Participant;
+use Illuminate\Http\Request;
 
 class RoundController extends Controller
 {
@@ -25,11 +26,36 @@ class RoundController extends Controller
 
         return response()->json($round);
     }
+
     public function destroy($id)
     {
         $round = Round::findOrFail($id);
         $round->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    public function addParticipant(Request $request)
+    {
+        $request->validate([
+            'round_id' => 'required|integer|exists:rounds,id',
+            'participant_id' => 'required|integer|exists:participants,id',
+            'total_points' => 'required|integer|min:0',
+        ]);
+
+        $round = Round::find($request->round_id);
+        $participant = Participant::find($request->participant_id);
+
+        if ($round && $participant) {
+            if (!$round->participants()->where('participant_id', $participant->id)->exists()) {
+                $round->participants()->attach($participant->id, ['total_points' => $request->total_points]);
+            } else {
+                $round->participants()->updateExistingPivot($participant->id, ['total_points' => $request->total_points]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Participant added to round successfully']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Error adding participant to round'], 400);
     }
 }
