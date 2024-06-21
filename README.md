@@ -29,3 +29,4 @@ https://www.reddit.com/r/docker/comments/181s76n/docker_w_vanguard_riots_antiche
 - https://stackoverflow.com/questions/67102759/getting-msg-as-cmdlet-invoke-webrequest-at-command-pipeline-position-1-supply-v
 - https://laravel.com/docs/11.x/installation#sail-on-windows
 - https://vitejs.dev/guide/
+- https://github.com/twbs/bootstrap/blob/v5.3.3/scss/_accordion.scss
