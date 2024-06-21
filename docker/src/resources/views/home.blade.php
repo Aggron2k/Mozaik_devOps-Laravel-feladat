@@ -70,7 +70,8 @@
                                                                 <div id="collapseRound{{ $round->id }}" class="accordion-collapse collapse show"
                                                                     aria-labelledby="headingRound{{ $round->id }}"
                                                                     data-bs-parent="#collapseCompetition{{ $competition->id }}">
-                                                                    <div class="accordion-body">
+                                                                    <div class="accordion-body-p">
+                                                                        <!-- ITT a baj mivel duplikált adat sor ezért bugosan tölti fel  -->
                                                                         <ul>
                                                                             @foreach ($round->participants as $participant)
                                                                                 <div class="accordion-item" id="participant-{{ $participant->id }}">
@@ -375,7 +376,7 @@
                         $('.modal-backdrop').remove();
                     });
                     var newRoundHtml =
-                        '<div class="accordion-item">' +
+                        '<div class="accordion-item" id="round-' + data.id + '">' +
                         '<h2 class="accordion-header" id="headingRound' + data.id + '">' +
                         '<button class="accordion-button" type="button" data-bs-toggle="collapse" ' +
                         'data-bs-target="#collapseRound' + data.id + '" aria-expanded="true" ' +
@@ -388,11 +389,11 @@
                         '<b> | </b>' +
                         '<span type="button" class="btn btn-primary">Add participants</span>' +
                         '<b> | </b> ' +
-                        '<span type="button" class="btn btn-danger">Delete</span>' +
+                        '<span type="button" class="btn btn-danger delete-round-button" data-id="' + data.id + '">Delete</span>' +
                         '</button>' +
                         '</h2>' +
                         '<div id="collapseRound' + data.id + '" class="accordion-collapse collapse show" ' +
-                        'aria-labelledby="headingRound' + data.id + '" data-bs-parent="#accordionCompetitions">' +
+                        'aria-labelledby="headingRound' + data.id + '" data-bs-parent="#competition-' + competitionId + ' .accordion-body">' +
                         '<div class="accordion-body">' +
                         '</div>' +
                         '</div>' +
