@@ -230,6 +230,7 @@
 </div>
 
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -487,40 +488,38 @@
         $('#addParticipantForm').submit(function (e) {
             e.preventDefault();
 
-            var formData = $(this).serialize();
+            var formData = {
+                round_id: $('#roundId').val(),
+                participant_id: $('#participantSelect').val(),
+                total_points: $('#totalPoints').val(),
+                _token: $('input[name="_token"]').val()
+            };
 
             $.ajax({
-                url: '/participants', // Assuming this is your endpoint for adding participants
+                url: '/add_participant_to_round',
                 type: 'POST',
                 dataType: 'json',
-                data: {
-                    name: $('#name').val(),
-                    email: $('#email').val(),
-                    phone: $('#phone').val(),
-                    address: $('#address').val(),
-                    _token: '{{ csrf_token() }}' // Include CSRF token if required
-                },
+                data: formData,
                 success: function (response) {
                     console.log('Participant added successfully:', response);
-                    // Optionally, do something on success
+                    $('#addParticipantModal').modal('hide');
+                    $(document).on('hidden.bs.modal', function (e) {
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (xhr) {
                     console.log('Error adding participant:', xhr.responseJSON);
-                    // Handle errors here, e.g., display error messages to the user
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
-                        // Example: Display error messages in a div with id="error-messages"
                         $('#error-messages').empty();
                         $.each(errors, function (key, value) {
                             $('#error-messages').append('<div>' + value[0] + '</div>');
                         });
                     } else {
-                        // Handle other types of errors (e.g., 500 Internal Server Error)
                         alert('Error adding participant. Please try again later.');
                     }
                 }
             });
-
         });
 
 

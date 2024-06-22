@@ -35,7 +35,8 @@ Route::delete('/rounds/{id}', [RoundController::class, 'destroy'])->name('round.
 Route::delete('/rounds/{round_id}/participants/{participant_id}', [RoundParticipantController::class, 'destroy'])->name('round.participant.destroy');
 
 Route::get('/participants/{roundId}', [ParticipantsController::class, 'getList']);
-Route::post('/add_participant_to_round', [ParticipantsController::class, 'store']);
+Route::post('/add_participant_to_round', [RoundParticipantController::class, 'store']);
+
 
 
 

@@ -1,6 +1,0 @@
---#{$prefix}accordion-body-padding-x: #{$accordion-body-padding-x};
---#{$prefix}accordion-body-padding-y: #{$accordion-body-padding-y};
-
-.accordion-body-p {
-    padding: var(--#{$prefix}accordion-body-padding-y) var(--#{$prefix}accordion-body-padding-x);
-  }
