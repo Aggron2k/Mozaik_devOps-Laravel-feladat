@@ -73,12 +73,10 @@
                                                                     aria-labelledby="headingRound{{ $round->id }}"
                                                                     data-bs-parent="#collapseCompetition{{ $competition->id }}">
                                                                     <div class="accordion-body-p">
-                                                                        <!-- ITT a baj mivel duplikált adat sor ezért bugosan tölti fel  -->
                                                                         <ul>
                                                                             @foreach ($round->participants as $participant)
                                                                                 <div class="accordion-item" id="participant-{{ $participant->id }}">
-                                                                                    <h2 class="accordion-header"
-                                                                                        id="headingParticipant{{ $participant->id }}">
+                                                                                    <h2 class="accordion-header" id="headingParticipant{{ $participant->id }}">
                                                                                         <button class="accordion-button" type="button"
                                                                                             data-bs-toggle="collapse"
                                                                                             data-bs-target="#collapseParticipant{{ $participant->id }}"
@@ -86,8 +84,8 @@
                                                                                             aria-controls="collapseParticipant{{ $participant->id }}">
                                                                                             <b>{{ $participant->name }}</b>
                                                                                             <b> | </b>
-                                                                                            <!-- TODO:: Add points here -->
-                                                                                            <!-- <span type="button" class="btn btn-success">{{ $participant->points }}</span> -->
+                                                                                            <span type="button" class="btn btn-success">Total Point: {{ $participant->pivot->total_points }}</span>
+                                                                                            <b> | </b>
                                                                                             <span type="button"
                                                                                                 class="btn btn-danger delete-participant-button"
                                                                                                 data-round-id="{{ $round->id }}"
@@ -435,11 +433,7 @@
                         '<b> | </b>' +
                         '<span type="button" class="btn btn-secondary">' + data.date + '</span>' +
                         '<b> | </b>' +
-
-
                         '<span type="button" class="btn btn-primary add-participant-button" data-bs-toggle="modal" data-bs-target="#addParticipantModal" data-id="' + data.id + '">Add participants</span>' + 
-
-
                         '<b> | </b> ' +
                         '<span type="button" class="btn btn-danger delete-round-button" data-id="' + data.id + '">Delete</span>' +
                         '</button>' +

@@ -51,4 +51,11 @@ class CompetitionController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function show($id)
+    {
+        $competition = Competition::with(['rounds.participants'])->findOrFail($id);
+
+        return view('competition.show', compact('competition'));
+    }
+
 }

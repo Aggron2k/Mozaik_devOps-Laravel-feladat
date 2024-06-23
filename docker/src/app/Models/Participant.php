@@ -15,6 +15,8 @@ class Participant extends Model
 
     public function rounds()
     {
-        return $this->belongsToMany(Round::class, 'round_participant');
+        return $this->belongsToMany(Round::class, 'round_participant')
+                    ->withPivot('total_points')
+                    ->withTimestamps();
     }
 }
