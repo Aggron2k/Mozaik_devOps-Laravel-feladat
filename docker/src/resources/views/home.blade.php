@@ -298,6 +298,11 @@
                         '<b> | </b> <span type="button" class="btn btn-secondary">' + data.location + '</span>' +
                         '<b> | </b>' +
                         '<span type="button" class="btn btn-secondary">' + data.year + '</span>' +
+                        '<b> | </b>' +
+                        '<span type="button" class="btn btn-primary" id="addRoundBtn" data-bs-toggle="modal"' +
+                        'data-bs-target="#addRoundModal" data-id="' + data.id + '">Add ' +
+                        'round</span>' +
+                        '<b> | </b>' +
                         '<span type="button" class="btn btn-danger delete-competition-button" data-id="' + data.id + '">Delete</span>' +
                         '</button>' +
                         '</h2>' +
@@ -378,7 +383,7 @@
                 success: function (response) {
                     if (response.success) {
                         $participantItem.remove();
-                        // alert('Successfully deleted participant from round.');
+                        alert('Successfully deleted participant from round.');
                     } else {
                         alert('Failed to delete participant from round.');
                     }
@@ -430,7 +435,11 @@
                         '<b> | </b>' +
                         '<span type="button" class="btn btn-secondary">' + data.date + '</span>' +
                         '<b> | </b>' +
-                        '<span type="button" class="btn btn-primary">Add participants</span>' +
+
+
+                        '<span type="button" class="btn btn-primary add-participant-button" data-bs-toggle="modal" data-bs-target="#addParticipantModal" data-id="' + data.id + '">Add participants</span>' + 
+
+
                         '<b> | </b> ' +
                         '<span type="button" class="btn btn-danger delete-round-button" data-id="' + data.id + '">Delete</span>' +
                         '</button>' +
@@ -501,7 +510,7 @@
                 dataType: 'json',
                 data: formData,
                 success: function (response) {
-                    console.log('Participant added successfully:', response);
+                    // console.log('Participant added successfully:', response);
                     $('#addParticipantModal').modal('hide');
                     $(document).on('hidden.bs.modal', function (e) {
                         $('.modal-backdrop').remove();
