@@ -462,10 +462,10 @@
             var roundId = $(this).data('id');
             $('#roundId').val(roundId);
 
-            // Clear previous options in select
+            
             $('#participantSelect').empty();
 
-            // Fetch participants for the round via AJAX
+            
             $.ajax({
                 url: '/participants/' + roundId,
                 type: 'GET',
@@ -473,12 +473,12 @@
                 success: function (response) {
                     var participants = response.participants;
 
-                    // Populate select with participants
+                    
                     participants.forEach(function (participant) {
                         $('#participantSelect').append('<option value="' + participant.id + '">' + participant.name + '</option>');
                     });
 
-                    // Show modal after options are populated
+                    
                     $('#addParticipantModal').modal('show');
                 },
                 error: function (xhr) {
@@ -489,41 +489,79 @@
         });
 
         $('#addParticipantForm').submit(function (e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            var formData = {
-                round_id: $('#roundId').val(),
-                participant_id: $('#participantSelect').val(),
-                total_points: $('#totalPoints').val(),
-                _token: $('input[name="_token"]').val()
-            };
+    var formData = {
+        round_id: $('#roundId').val(),
+        participant_id: $('#participantSelect').val(),
+        total_points: $('#totalPoints').val(),
+        _token: $('input[name="_token"]').val()
+    };
 
-            $.ajax({
-                url: '/add_participant_to_round',
-                type: 'POST',
-                dataType: 'json',
-                data: formData,
-                success: function (response) {
-                    // console.log('Participant added successfully:', response);
+    $.ajax({
+        url: '/add_participant_to_round',
+        type: 'POST',
+        dataType: 'json',
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                var participant = response.participant;
+                var roundParticipant = response.round_participant;
+
+                if (participant && roundParticipant) {
+                    var newParticipantHtml = `
+                        <div class="accordion-item" id="participant-${participant.id}">
+                            <h2 class="accordion-header" id="headingParticipant${participant.id}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseParticipant${participant.id}" aria-expanded="true" aria-controls="collapseParticipant${participant.id}">
+                                    <b>${participant.name}</b>
+                                    <b> | </b>
+                                    <span type="button" class="btn btn-success">Total Point: ${roundParticipant.total_points}</span>
+                                    <b> | </b>
+                                    <span type="button" class="btn btn-danger delete-participant-button" data-round-id="${roundParticipant.round_id}" data-participant-id="${participant.id}">Delete</span>
+                                </button>
+                            </h2>
+                            <div id="collapseParticipant${participant.id}" class="accordion-collapse collapse" aria-labelledby="headingParticipant${participant.id}" data-bs-parent="#collapseRound${roundParticipant.round_id}">
+                                <div class="accordion-body">
+                                    <p>Email: ${participant.email}</p>
+                                    <p>Phone: ${participant.phone}</p>
+                                    <p>Address: ${participant.address}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    
+                    $('#collapseRound' + roundParticipant.round_id + ' ul').append(newParticipantHtml);
+
+                    
                     $('#addParticipantModal').modal('hide');
+
+                    
                     $(document).on('hidden.bs.modal', function (e) {
                         $('.modal-backdrop').remove();
                     });
-                },
-                error: function (xhr) {
-                    console.log('Error adding participant:', xhr.responseJSON);
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        $('#error-messages').empty();
-                        $.each(errors, function (key, value) {
-                            $('#error-messages').append('<div>' + value[0] + '</div>');
-                        });
-                    } else {
-                        alert('Error adding participant. Please try again later.');
-                    }
+                } else {
+                    console.error('Unexpected response structure:', response);
                 }
-            });
-        });
+            } else {
+                alert('Error adding participant. Please try again later.');
+            }
+        },
+        error: function (xhr) {
+            console.log('Error adding participant:', xhr.responseJSON);
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.errors;
+                $('#error-messages').empty();
+                $.each(errors, function (key, value) {
+                    $('#error-messages').append('<div>' + value[0] + '</div>');
+                });
+            } else {
+                alert('Error adding participant. Please try again later.');
+            }
+        }
+    });
+});
+
 
 
     });
